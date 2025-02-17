@@ -66,7 +66,7 @@ class JamSketchController
         musicData.storeCurveCoordinates(i, y)
     }
 
-    override fun storeCurveCoordinates(channel: Int, i: Int, y: Int) {
+    override fun storeCurveCoordinatesByChannel(channel: Int, i: Int, y: Int) {
         musicData.storeCurveCoordinatesByChannel(channel, i, y)
     }
 

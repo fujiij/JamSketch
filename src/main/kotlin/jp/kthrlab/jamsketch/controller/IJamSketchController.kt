@@ -46,7 +46,7 @@ interface IJamSketchController {
      * @param i         index（X-coordinate）
      * @param y         Y-coordinate
      */
-    fun storeCurveCoordinates(channel : Int, i: Int, y: Int)
+    fun storeCurveCoordinatesByChannel(channel : Int, i: Int, y: Int)
 
 
     // TODO: develop

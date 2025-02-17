@@ -149,24 +149,13 @@ class JamSketchMultichannel : SimplePianoRollMultiChannel(), IConfigAccessible {
         // smfread should be called after selecting a MIDI output device.
         smfread((observableMusicData.scc as SCCDataSet).midiSequence)
 
-//        dataModel = (musicData.scc as SCCDataSet)
-//            .getFirstPartWithChannel(config.music.channel_gen)
-//            .getPianoRollDataModel(config.music.initial_blank_measures,
-//            config.music.initial_blank_measures + config.music.num_of_measures)
         dataModel = PianoRollDataModelMultiChannel(
             config.music.initial_blank_measures,
             config.music.initial_blank_measures + config.music.num_of_measures,
-//            musicData.scc.division,
             config.music.beats_per_measure,
             config.channels,
             musicData.scc,
         )
-//        .let {
-//            config.channels.forEach { channel ->
-//                it.channelPartSet.add(channel.number, (musicData.scc as SCCDataSet).getFirstPartWithChannel(channel.number))
-//            }
-//            it
-//        }
 
         // init music player ((SMFPlayer)this.musicPlayer[i]).setTickPosition(tick);
         tickPosition = 0
@@ -309,7 +298,6 @@ class JamSketchMultichannel : SimplePianoRollMultiChannel(), IConfigAccessible {
     }
 
     fun updateCurve() {
-        println("multichannel updateCurve()")
         // Update music data using the JamSketch controller class
         if (config.general.keyboard_width < pmouseX && config.general.keyboard_width < mouseX) {
             this.controller.updateCurve(

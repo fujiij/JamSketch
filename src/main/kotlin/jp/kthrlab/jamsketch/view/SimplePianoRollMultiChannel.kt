@@ -2,22 +2,15 @@ package jp.kthrlab.jamsketch.view
 
 import jp.crestmuse.cmx.processing.gui.SimplePianoRoll
 import jp.kthrlab.jamsketch.music.data.PianoRollDataModelMultiChannel
+import java.awt.Color
 
 abstract class SimplePianoRollMultiChannel: SimplePianoRoll() {
     protected abstract var currentInstrumentChannelNumber: Int
-//    var octaveWidth: Double = 210.0
-//    val numOfKeysPerOctave = 12
-//    val semitoneWidth: Double
-//        get() = octaveWidth / numOfKeysPerOctave
-
-//    override fun beat2x(measure: Int, beat: Double, data: PianoRoll.DataModel?): Double {
-//        val lenMeas = (this.width - this.keyboardWidth) / data!!.measureNum.toDouble()
-//        return this.keyboardWidth + measure.toDouble() * lenMeas + beat * lenMeas / data.beatNum.toDouble()
-//    }
 
     override fun draw() {
         super.draw()
         drawChannels()
+        drawPlayhead()
     }
 
     fun drawChannels() {
@@ -47,6 +40,20 @@ abstract class SimplePianoRollMultiChannel: SimplePianoRoll() {
                 }
             }
         }
+    }
+
+    //
+   private fun drawPlayhead() {
+        val measure = this.currentMeasure
+        val beat = this.currentBeat
+
+        if (measure >= 0) {
+            val x = this.beat2x(measure, beat)
+            this.stroke(Color.RED.rgb)
+            this.strokeWeight(1.0f)
+            this.line(x.toFloat(), 0.0f, x.toFloat(), 630.0f)
+        }
+
     }
 
 }

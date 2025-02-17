@@ -39,7 +39,7 @@ class JamSketchClientController(
     }
 
     override fun updateCurve(channel: Int, from: Int, thru: Int, y: Int) {
-        innerController.updateCurve(channel, thru, from, thru)
+        innerController.updateCurve(channel, from, thru, y)
         webSocketClient.Send(ClientParameter(channel, from, thru, y))
     }
 
@@ -47,8 +47,8 @@ class JamSketchClientController(
         innerController.storeCurveCoordinates(i, y)
     }
 
-    override fun storeCurveCoordinates(channel: Int, i: Int, y: Int) {
-        innerController.storeCurveCoordinates(channel, i, y)
+    override fun storeCurveCoordinatesByChannel(channel: Int, i: Int, y: Int) {
+        innerController.storeCurveCoordinatesByChannel(channel, i, y)
     }
 
     override fun setMelodicOutline(measure: Int, tick: Int, value: Double) {
