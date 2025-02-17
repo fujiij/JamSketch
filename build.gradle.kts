@@ -20,7 +20,7 @@ repositories {
 
 application {
     // Define the main class for the application.
-    mainClass = "jp.kthrlab.jamsketch.view.JamSketch"
+    mainClass = "jp.kthrlab.jamsketch.view.JamSketchMultichannel"
 }
 
 sourceSets {
