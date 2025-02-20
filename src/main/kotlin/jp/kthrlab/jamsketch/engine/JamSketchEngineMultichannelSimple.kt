@@ -48,6 +48,10 @@ class JamSketchEngineMultichannelSimple : JamSketchEngineMultichannelAbstract(){
             beatsPerMeas = config.music.num_of_measures,
             modelPath =  config.simple.model_file,
             entropy_bias = config.simple.ent_bias,
+            w1 = config.simple.w1,
+            w2 = config.simple.w2,
+            w3 = config.simple.w3,
+            w4 = config.simple.w4,
         )
     }
 

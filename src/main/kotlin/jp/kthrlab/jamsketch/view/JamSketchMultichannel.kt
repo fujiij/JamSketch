@@ -2,6 +2,7 @@ package jp.kthrlab.jamsketch.view
 
 import controlP5.ControlP5
 import jp.crestmuse.cmx.filewrappers.SCCDataSet
+import jp.crestmuse.cmx.processing.CMXController
 import jp.kthrlab.jamsketch.config.AccessibleConfig
 import jp.kthrlab.jamsketch.config.IConfigAccessible
 import jp.kthrlab.jamsketch.controller.IJamSketchController
@@ -18,8 +19,7 @@ import jp.kthrlab.jamsketch.view.element.addParticle
 import jp.kthrlab.jamsketch.view.element.drawBGImage
 import jp.kthrlab.jamsketch.view.element.drawGuideCurve
 import jp.kthrlab.jamsketch.view.element.drawParticles
-import jp.kthrlab.jamsketch.view.util.addButtons
-import jp.kthrlab.jamsketch.view.util.addInstrumentSelector
+import jp.kthrlab.jamsketch.view.util.*
 import jp.kthrlab.jamsketch.web.ServiceLocator
 import processing.core.PApplet
 import java.io.File
@@ -91,7 +91,7 @@ class JamSketchMultichannel : SimplePianoRollMultiChannel(), IConfigAccessible {
     var panel: JPanel = JPanel().let {
         val layout = BoxLayout(it, BoxLayout.Y_AXIS)
         it.layout = layout
-        it.add(JLabel("The connection is lost."))
+        it.add(JLabel("Connection is lost."))
         it
     }
 
@@ -477,6 +477,27 @@ class JamSketchMultichannel : SimplePianoRollMultiChannel(), IConfigAccessible {
      */
     fun setInstrument(value: Int) {
         currentInstrumentChannelNumber = config.channels.find { channel -> channel.program == value }!!.number
+    }
+
+    /**
+     * ControlP5 callback
+     * Panic (Send all notes off)
+     */
+    fun panic() {
+        println("!!!!! panic !!!!!")
+//        val cmx = CMXController.getInstance()
+//        val eventSender = cmx.createMidiEventSender()
+//        (3..5).forEach { octave ->
+//            baseNotes.forEach { name, _ ->
+//                val nn = getNoteNumber(name, octave)
+//                musicData.channelCurveSet.forEach { channel ->
+//                    println("sendNoteOff tickPosition==$tickPosition, channel==${channel.first} octave==$octave, name==$name, nn=$nn")
+//                    eventSender.sendNoteOff(tickPosition, channel.first, nn, 100)
+////                    println("sendNoteOff($tickPosition, $channel.first, $nn, 100)")
+//                }
+//            }
+//        }
+        sendAllNotesOff(musicData)
     }
 
     override fun keyReleased() {
