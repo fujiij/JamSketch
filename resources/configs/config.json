@@ -78,7 +78,12 @@
     }
   ],
   "simple": {
-    "model_file": "/models/model20180321.json"
+    "model_file": "/models/model20180321.json",
+    "entropy_bias": 0.0,
+    "w1": 0.5,
+    "w2": 0.8,
+    "w3": 1.2,
+    "w4": 2.0
   },
   "tf": {
     "tf_model_dir": "/tf/onebar_model_div4",
