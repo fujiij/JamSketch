@@ -5,7 +5,7 @@ import jp.crestmuse.cmx.misc.ChordSymbol2
 import jp.crestmuse.cmx.processing.CMXController
 import jp.kthrlab.jamsketch.music.generator.NoteSeqGeneratorSimpleGuided
 
-class JamSketchEngineSimpleGuided : JamSketchEngineAbstract() {
+class JamSketchEngineSimpleGuided : JamSketchEngineSinglechannelAbstract() {
 
     override fun initLocal() {
         // Do nothing

@@ -39,16 +39,26 @@ open class MusicData(
         )
     }
 
-//    fun getPianoRollDataModel(displaysFrom: Int, displaysTo: Int): PianoRoll.DataModel {
-//        return PianoRollDataModelMultiChannel(displaysTo, displaysFrom,  division, beats_per_measure)
-//    }
-
     // IMusicData
     override fun addCurveByChannel(channel: Int, curve: MutableList<Int?>) {
         channelCurveSet += Pair(channel, curve)
     }
 
+    override fun resetMusicData() {
+        // remove notes for curve1 and curves
+        // tickPosition must be 0
+        CMXController.getInstance().setTickPosition(0)
+
+        channelCurveSet.forEach { (channel, curve) ->
+            curve.fill(null)
+            val channelPart = scc.toDataSet().getFirstPartWithChannel(channel)
+            channelPart.remove(channelPart.noteList.toList())
+        }
+    }
+
     override fun resetCurves() {
+        // TODO stop using curve1
+        curve1.fill(null)
         channelCurveSet.forEach { (channel, curve) ->
             curve.fill(null)
         }
@@ -67,7 +77,6 @@ open class MusicData(
             val channelPart = scc.toDataSet().getFirstPartWithChannel(channel)
             channelPart.remove(channelPart.noteList.toList())
         }
-
     }
 
     override fun storeCurveCoordinatesByChannel(channel: Int, from: Int, thru: Int, y: Int) {
@@ -82,10 +91,10 @@ open class MusicData(
         }
     }
 
-    override fun resetCurve() {
-        curve1.fill(null)
-        resetCurves()
-    }
+//    override fun resetCurve() {
+//        curve1.fill(null)
+//        resetCurves()
+//    }
 
     override fun storeCurveCoordinates(from: Int, thru: Int, y: Int) {
         (from..thru).forEach { i: Int -> curve1[i] = y }

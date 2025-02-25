@@ -79,7 +79,7 @@ class JamSketchController
      */
     override fun reset() {
         // reset curve1 and curves
-        this.musicData.resetCurve()
+        this.musicData.resetCurves()
 
         // removing generated note
         this.musicData.resetNotes()

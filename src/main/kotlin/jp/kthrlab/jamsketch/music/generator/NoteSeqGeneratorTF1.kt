@@ -47,12 +47,12 @@ class NoteSeqGeneratorTF1(
             val currentTime = System.nanoTime()
             if (currentTime - lastUpdateTime >= 1000 * 1000 * melody_execution_span.toLong()) {
 
-                mr!!.getMusicElement("curve", measure, tick).resumeUpdate()
+//                mr!!.getMusicElement("curve", measure, tick).resumeUpdate() <- Did in engine
 
                 lastUpdateMeasure = measure
                 lastUpdateTime = currentTime
 
-                val tf_input = preprocessing(measure, mr)
+                val tf_input = preprocessing(measure, mr!!)
                 val tf_output = tfModel.session()
                     .runner()
                     .feed(tf_model_layer, TFloat32.tensorOf(tf_input))
@@ -75,7 +75,7 @@ class NoteSeqGeneratorTF1(
         val tf_input = NdArrays.ofFloats(shape)
         // TODO: need to init tf_input with 0.0f?
 
-        val mes = mr.getMusicElementList("curve")
+        val mes = mr.getMusicElementList("outline")
         val me_start = (mes.size / num_of_measures) * measure
         val me_end = me_start + savedModelInputs.shape[1].toInt() //division
         println("mes.subList($me_start, $me_end) ${mes.size}")
@@ -176,7 +176,7 @@ class NoteSeqGeneratorTF1(
         }
 
         for (i in 0..lastTick) {
-            val e = mr.getMusicElement("melody", measure, i)
+            val e = mr.getMusicElement("gen", measure, i)
 
 //            if (tf_normalized[0][i.toLong()][120][0].getFloat() == 1.0f) {
             if (tf_normalized[0][i.toLong()][tf_normalized[0][i.toLong()].size()-1][0].getFloat() == 1.0f) {

@@ -18,7 +18,7 @@
     "show_particles" : false
   },
   "music" : {
-    "jamsketch_engine": "JamSketchEngineMultichannelSimple",
+    "jamsketch_engine": "JamSketchEngineSimple",
     "midfilename": "/music/blues02.mid",
     "chordprog": ["C", "F", "C", "C", "F", "F", "C", "C", "G", "F", "C", "G"],
     "num_of_measures": 12,

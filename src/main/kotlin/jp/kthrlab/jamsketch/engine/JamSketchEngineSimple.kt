@@ -4,44 +4,80 @@ import jp.crestmuse.cmx.inference.MusicCalculator
 import jp.crestmuse.cmx.misc.ChordSymbol2
 import jp.crestmuse.cmx.processing.CMXController
 import jp.kthrlab.jamsketch.music.generator.NoteSeqGeneratorSimple
+import jp.kthrlab.jamsketch.music.generator.SCCGenerator
+import kotlin.random.Random
 
-open class JamSketchEngineSimple : JamSketchEngineAbstract() {
-    override fun initMusicRepresentation() {
-        this.mr = CMXController.createMusicRepresentation(config.music.num_of_measures, config.music.division)
-        mr.addMusicLayerCont(OUTLINE_LAYER)
-
-        mr.addMusicLayer(
-            CHORD_LAYER,
-            listOf<ChordSymbol2>(ChordSymbol2.C, ChordSymbol2.F, ChordSymbol2.G),
-            config.music.division)
-        config.music.chordprog.forEachIndexed { index, chord ->
-            mr.getMusicElement(CHORD_LAYER, index, 0).setEvidence(ChordSymbol2.parse(chord))
-        }
-
-        mr.addMusicLayer(MELODY_LAYER, (0..11).toList())
-    }
+class JamSketchEngineSimple : JamSketchEngineAbstract(){
 
     override fun initLocal() {
         // Do nothing
     }
 
-    override fun musicCalculatorForOutline(): MusicCalculator? {
-        val noteSeqGenerator =
-            NoteSeqGeneratorSimple(
-                noteLayer = MELODY_LAYER,
-                chordLayer = CHORD_LAYER,
-                beatsPerMeas = config.music.beats_per_measure,
-                entropy_bias = config.simple.ent_bias,
-                modelPath = config.simple.model_file)
-        return noteSeqGenerator
+    override fun initMusicRepresentation() {
+        val mr = CMXController.createMusicRepresentation(config.music.num_of_measures, config.music.division)
+
+        mr.addMusicLayerCont(Layer.OUTLINE)
+
+        mr.addMusicLayer(
+            Layer.CHORD,
+            listOf<ChordSymbol2>(ChordSymbol2.C, ChordSymbol2.F, ChordSymbol2.G),
+            config.music.division
+        )
+        config.music.chordprog.forEachIndexed { index, chord ->
+            mr.getMusicElement(Layer.CHORD, index, 0).setEvidence(ChordSymbol2.parse(chord))
+        }
+
+        // TODO: Need new mr for each channel?
+        mr.addMusicLayer(Layer.GEN, (0..11).toList())
+        config.channels.forEach { channel ->
+            channelMrSet.add(Pair(channel.number, mr))
+            val mapCalc = mutableMapOf(Pair(Layer.OUTLINE, musicCalculatorForOutline()), Pair(Layer.GEN, musicCalculatorForGen(channel.number)))
+            channelCalcSet.add(Pair(channel.number, mapCalc))
+        }
+
     }
 
-    override fun outlineUpdated(measure: Int, tick: Int) {
-        // do nothing
+    override fun musicCalculatorForOutline(): MusicCalculator {
+        return NoteSeqGeneratorSimple(
+            noteLayer = Layer.GEN,
+            chordLayer = Layer.CHORD,
+            beatsPerMeas = config.music.num_of_measures,
+            modelPath =  config.simple.model_file,
+            entropy_bias = config.simple.ent_bias,
+            w1 = config.simple.w1,
+            w2 = config.simple.w2,
+            w3 = config.simple.w3,
+            w4 = config.simple.w4,
+        )
     }
 
-    override fun automaticUpdate(): Boolean {
-        return true
+    override fun musicCalculatorForGen(channel: Int): MusicCalculator {
+        return SCCGenerator(
+            scc.toDataSet().getFirstPartWithChannel(channel),
+            scc.division,
+            Layer.OUTLINE,
+            null,
+            config.music.division,
+            config.music.beats_per_measure,
+        )
     }
+
+    override fun outlineUpdated(channel: Int, measure: Int, tick: Int) {
+        println("outlineUpdated($channel, $measure, $tick)")
+        val mr = channelMrSet.find { it.first == channel }?.second
+//        println("    mr == $mr")
+
+        val e = mr?.getMusicElement(Layer.OUTLINE, measure, tick)
+//        println("    e == $e")
+        e?.resumeUpdate()
+
+        val noteSeqGenerator = channelCalcSet.find { it.first == channel }?.second?.get(Layer.OUTLINE)
+//        println("    noteSeqGenerator == $noteSeqGenerator")
+        noteSeqGenerator?.updated(measure, tick, Layer.OUTLINE, mr)
+
+        val sccGenerator = channelCalcSet.find { it.first == channel }?.second?.get(Layer.GEN)
+        sccGenerator?.updated(measure, tick, Layer.GEN, mr)
+    }
+
 
 }

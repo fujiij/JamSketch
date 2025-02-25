@@ -14,7 +14,12 @@ interface IMusicData {
     var curve1: MutableList<Int?>
     var scc: SCC
 
-    fun resetCurve()
+    /**
+     * Reset curves and notes
+     */
+    fun resetMusicData()
+
+//    fun resetCurve()
     fun resetCurves()
     fun resetNotes()
     fun storeCurveCoordinates(i: Int, y: Int)
