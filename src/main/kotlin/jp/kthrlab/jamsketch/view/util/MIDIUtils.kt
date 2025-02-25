@@ -38,8 +38,8 @@ val programs = mapOf(
     15 to "",
     16 to "",
     17 to "",
-    18 to "",
-    19 to "",
+    18 to "Percussive Organ",
+    19 to "Rock Organ",
     20 to "",
     21 to "",
     22 to "",
@@ -165,12 +165,6 @@ fun sendAllNotesOff() {
             }
             midiDevice.close()
         }
-//        with (midiDevice as Synthesizer) {
-//            channels.forEach { channel ->
-////                channel.allNotesOff()
-//                channel.allSoundOff()
-//            }
-//        }
     }
 }
 
@@ -180,33 +174,13 @@ fun sendAllNotesOff(musicData: MusicData) {
         val channelPart = musicData.scc.toDataSet().getFirstPartWithChannel(channel.first)//.addNoteElement()
         val tickPosition = cmx.tickPosition
 
-        // from octave 3 to 5
-        (3..5).forEach { octave ->
-            baseNotes.forEach { name, _ ->
-                val nn = getNoteNumber(name, octave)
-                musicData.channelCurveSet.forEach { channel ->
-                    val noteElement = channelPart.addNoteElement(tickPosition, tickPosition, nn, 0, 0)
-                    println("addNoteElement($tickPosition, $tickPosition, $nn, 0, 0)")
-                    channelPart.remove(noteElement)
-                }
+        // from note 0 t0 127
+        musicData.channelCurveSet.forEach { channel ->
+            (0..127).forEach { nn ->
+                val noteElement = channelPart.addNoteElement(tickPosition, tickPosition, nn, 0, 0)
+                println("addNoteElement($tickPosition, $tickPosition, $nn, 0, 0)")
+                channelPart.remove(noteElement)
             }
         }
     }
-
-
-//    val midiDeviceInfo = MidiSystem.getMidiDeviceInfo()
-//
-//    midiDeviceInfo.forEach { info ->
-//        val midiDevice = MidiSystem.getMidiDevice(info)
-//        println("midiDevice.isOpen==${midiDevice.isOpen}, ${info.name}")
-//        midiDevice.open()
-//
-//    }
-//
-    // returns default
-//    val synthesizer = MidiSystem.getSynthesizer()
-//    println("synthesizer.deviceInfo.name==${synthesizer.deviceInfo.name}")
-//    synthesizer.channels.forEach { channel ->
-//        channel.allNotesOff()
-//    }
 }

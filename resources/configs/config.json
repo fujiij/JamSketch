@@ -32,8 +32,7 @@
     "how_in_advance": 1,
     "channel_gen": 1,
     "channel_guide": 2,
-    "input_file_path": "./inputs/data.json",
-    "ent_bias": 0.0
+    "input_file_path": "./inputs/data.json"
   },
   "channels": [
     {
@@ -80,10 +79,10 @@
   "simple": {
     "model_file": "/models/model20180321.json",
     "entropy_bias": 0.0,
-    "w1": 0.5,
+    "w1": 0.15,
     "w2": 0.8,
     "w3": 1.2,
-    "w4": 2.0
+    "w4": 2.4
   },
   "tf": {
     "tf_model_dir": "/tf/onebar_model_div4",

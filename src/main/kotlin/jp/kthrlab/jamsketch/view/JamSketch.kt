@@ -484,18 +484,6 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
      */
     fun panic() {
         println("!!!!! panic !!!!!")
-//        val cmx = CMXController.getInstance()
-//        val eventSender = cmx.createMidiEventSender()
-//        (3..5).forEach { octave ->
-//            baseNotes.forEach { name, _ ->
-//                val nn = getNoteNumber(name, octave)
-//                musicData.channelCurveSet.forEach { channel ->
-//                    println("sendNoteOff tickPosition==$tickPosition, channel==${channel.first} octave==$octave, name==$name, nn=$nn")
-//                    eventSender.sendNoteOff(tickPosition, channel.first, nn, 100)
-////                    println("sendNoteOff($tickPosition, $channel.first, $nn, 100)")
-//                }
-//            }
-//        }
         sendAllNotesOff(musicData)
     }
 
