@@ -10,16 +10,15 @@ fun addButtons(p5ctrl: ControlP5, mode: String) {
     } else {
         p5ctrl.addButton("startMusic").setLabel("Start / Stop").setPosition(20f, 645f).setSize(120, 40)
         p5ctrl.addButton("loadCurve").setLabel("Load").setPosition(300f, 645f).setSize(120, 40)
+        // panic!
+        p5ctrl.addButton("panic")
+            .setColorBackground(Color.LIGHT_GRAY.rgb)
+            .setColorForeground(Color.RED.rgb)
+            .setLabel("Panic!")
+            .setPosition((p5ctrl.papplet.width - 20 - 60).toFloat(), 645f)
+            .setSize(60, 40)
     }
     p5ctrl.addButton("resetMusic").setLabel("Reset").setPosition(160f, 645f).setSize(120, 40)
-
-    // panic!
-    p5ctrl.addButton("panic")
-        .setColorBackground(Color.LIGHT_GRAY.rgb)
-        .setColorForeground(Color.RED.rgb)
-        .setLabel("Panic!")
-        .setPosition((p5ctrl.papplet.width - 20 - 60).toFloat(), 645f)
-        .setSize(60, 40)
 }
 
 fun addInstrumentSelector(p5ctrl: ControlP5, channels: List<Channel>, color: (v1: Int, v2: Int, v3: Int) -> Int) {

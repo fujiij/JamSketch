@@ -38,25 +38,25 @@ class JamSketchController
      * @param y    Y座標
      * @param nn   note number（Y座標をnote numberに変換した値）
      */
-    override fun updateCurve(from: Int, thru: Int, y: Int, nn: Double) {
-
-        val size2 = musicData.num_of_measures * musicData.division
-        val curveSize = musicData.curve1.size
-
-        for (i in (from..thru)) {
-            if (0 <= i) {
-                // Store CursorPosition
-                storeCurveCoordinates(i, y)
-
-                // setEvidence (OUTLINE_LAYER)
-                println("var nn: $nn curve1[$i] == ${musicData.curve1[i]}")
-                val position: Int = (i * size2 / curveSize)
-                if (position >= 0) {
-                    setMelodicOutline((position / musicData.division), position % musicData.division, nn)
-                }
-            }
-        }
-    }
+//    override fun updateCurve(from: Int, thru: Int, y: Int, nn: Double) {
+//
+//        val size2 = musicData.num_of_measures * musicData.division
+//        val curveSize = musicData.curve1.size
+//
+//        for (i in (from..thru)) {
+//            if (0 <= i) {
+//                // Store CursorPosition
+//                storeCurveCoordinates(i, y)
+//
+//                // setEvidence (OUTLINE_LAYER)
+//                println("var nn: $nn curve1[$i] == ${musicData.curve1[i]}")
+//                val position: Int = (i * size2 / curveSize)
+//                if (position >= 0) {
+//                    setMelodicOutline((position / musicData.division), position % musicData.division, nn)
+//                }
+//            }
+//        }
+//    }
 
     override fun updateCurve(channel: Int, from: Int, thru: Int, y: Int) {
         musicData.storeCurveCoordinatesByChannel(channel, from, thru, y)
@@ -70,9 +70,9 @@ class JamSketchController
         musicData.storeCurveCoordinatesByChannel(channel, i, y)
     }
 
-    override fun setMelodicOutline(measure: Int, tick: Int, value: Double) {
-        engine.setMelodicOutline(measure, tick, value)
-    }
+//    override fun setMelodicOutline(measure: Int, tick: Int, value: Double) {
+//        engine.setMelodicOutline(measure, tick, value)
+//    }
 
     /**
      * リセットする

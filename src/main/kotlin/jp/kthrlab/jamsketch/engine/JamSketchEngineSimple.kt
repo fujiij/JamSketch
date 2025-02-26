@@ -5,7 +5,6 @@ import jp.crestmuse.cmx.misc.ChordSymbol2
 import jp.crestmuse.cmx.processing.CMXController
 import jp.kthrlab.jamsketch.music.generator.NoteSeqGeneratorSimple
 import jp.kthrlab.jamsketch.music.generator.SCCGenerator
-import kotlin.random.Random
 
 class JamSketchEngineSimple : JamSketchEngineAbstract(){
 
@@ -14,30 +13,35 @@ class JamSketchEngineSimple : JamSketchEngineAbstract(){
     }
 
     override fun initMusicRepresentation() {
-        val mr = CMXController.createMusicRepresentation(config.music.num_of_measures, config.music.division)
-
-        mr.addMusicLayerCont(Layer.OUTLINE)
-
-        mr.addMusicLayer(
-            Layer.CHORD,
-            listOf<ChordSymbol2>(ChordSymbol2.C, ChordSymbol2.F, ChordSymbol2.G),
-            config.music.division
-        )
-        config.music.chordprog.forEachIndexed { index, chord ->
-            mr.getMusicElement(Layer.CHORD, index, 0).setEvidence(ChordSymbol2.parse(chord))
-        }
-
-        // TODO: Need new mr for each channel?
-        mr.addMusicLayer(Layer.GEN, (0..11).toList())
         config.channels.forEach { channel ->
+            val mr = CMXController.createMusicRepresentation(config.music.num_of_measures, config.music.division)
+
+            // Layer.OUTLINE
+            mr.addMusicLayerCont(Layer.OUTLINE)
+
+            // Layer.CHORD
+            mr.addMusicLayer(
+                Layer.CHORD,
+                listOf<ChordSymbol2>(ChordSymbol2.C, ChordSymbol2.F, ChordSymbol2.G),
+                config.music.division
+            )
+            config.music.chordprog.forEachIndexed { index, chord ->
+                mr.getMusicElement(Layer.CHORD, index, 0).setEvidence(ChordSymbol2.parse(chord))
+            }
+
+            // Layer.GEN
+            mr.addMusicLayer(Layer.GEN, (0..11).toList())
+
             channelMrSet.add(Pair(channel.number, mr))
-            val mapCalc = mutableMapOf(Pair(Layer.OUTLINE, musicCalculatorForOutline()), Pair(Layer.GEN, musicCalculatorForGen(channel.number)))
+            val mapCalc = mutableMapOf(
+                Pair(Layer.OUTLINE, musicCalculatorForOutline(channel.number)),
+                Pair(Layer.GEN, musicCalculatorForGen(channel.number))
+            )
             channelCalcSet.add(Pair(channel.number, mapCalc))
         }
-
     }
 
-    override fun musicCalculatorForOutline(): MusicCalculator {
+    override fun musicCalculatorForOutline(channel: Int): MusicCalculator {
         return NoteSeqGeneratorSimple(
             noteLayer = Layer.GEN,
             chordLayer = Layer.CHORD,
@@ -64,18 +68,16 @@ class JamSketchEngineSimple : JamSketchEngineAbstract(){
 
     override fun outlineUpdated(channel: Int, measure: Int, tick: Int) {
         println("outlineUpdated($channel, $measure, $tick)")
-        val mr = channelMrSet.find { it.first == channel }?.second
-//        println("    mr == $mr")
 
+        val mr = channelMrSet.find { it.first == channel }?.second
         val e = mr?.getMusicElement(Layer.OUTLINE, measure, tick)
-//        println("    e == $e")
         e?.resumeUpdate()
 
-        val noteSeqGenerator = channelCalcSet.find { it.first == channel }?.second?.get(Layer.OUTLINE)
-//        println("    noteSeqGenerator == $noteSeqGenerator")
+        val channelCalc = channelCalcSet.find { it.first == channel }
+        val noteSeqGenerator = channelCalc?.second?.get(Layer.OUTLINE)
         noteSeqGenerator?.updated(measure, tick, Layer.OUTLINE, mr)
 
-        val sccGenerator = channelCalcSet.find { it.first == channel }?.second?.get(Layer.GEN)
+        val sccGenerator = channelCalc?.second?.get(Layer.GEN)
         sccGenerator?.updated(measure, tick, Layer.GEN, mr)
     }
 

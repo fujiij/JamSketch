@@ -4,6 +4,7 @@ import jp.crestmuse.cmx.filewrappers.SCC
 import jp.crestmuse.cmx.inference.MusicCalculator
 import jp.crestmuse.cmx.inference.MusicRepresentation
 import jp.crestmuse.cmx.misc.ChordSymbol2
+import jp.crestmuse.cmx.misc.ChordSymbol2.NON_CHORD
 import jp.crestmuse.cmx.processing.CMXController
 import jp.kthrlab.jamsketch.config.AccessibleConfig
 import jp.kthrlab.jamsketch.config.IConfigAccessible
@@ -18,12 +19,15 @@ abstract class JamSketchEngineAbstract : JamSketchEngine, IConfigAccessible {
     abstract fun initLocal()
     abstract fun outlineUpdated(channel: Int, measure: Int, tick: Int)
     abstract fun initMusicRepresentation()
-    abstract fun musicCalculatorForOutline(): MusicCalculator
+    abstract fun musicCalculatorForOutline(channel: Int): MusicCalculator
     abstract fun musicCalculatorForGen(channel: Int): MusicCalculator
-
 
     var channelMrSet: MutableSet<Pair<Int, MusicRepresentation>> = mutableSetOf()
     var channelCalcSet: MutableSet<Pair<Int, MutableMap<String, MusicCalculator>>> = mutableSetOf()
+
+    val fullChordProgression: Any
+        get() = List(config.music.initial_blank_measures) { NON_CHORD } +
+                List(config.music.repeat_times) { config.music.chordprog.toList()}.flatten()
 
     object Layer {
         const val OUTLINE = "outline"
@@ -80,19 +84,6 @@ abstract class JamSketchEngineAbstract : JamSketchEngine, IConfigAccessible {
                 it.getMusicElement(Layer.OUTLINE, element.measure(), element.tick()).setEvidence(Double.NaN)
             }
         }
-    }
-
-    override fun init(scc: SCC, target_part: SCC.Part) {
-        // Do nothing for multichannel
-    }
-
-    override fun setMelodicOutline(measure: Int, tick: Int, value: Double) {
-        // Do nothing for multichannel
-    }
-
-    override fun getMelodicOutline(measure: Int, tick: Int): Double {
-        // Do nothing for multichannel
-        return Double.NaN
     }
 
     override fun getChord(measure: Int, tick: Int): ChordSymbol2? {
