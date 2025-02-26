@@ -50,7 +50,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
             config.music.num_of_measures,
             config.music.repeat_times,
             config.music.division,
-            config.music.channel_gen,
+//            config.music.channel_gen,
         )
     val numOfMeasuresByDivision = musicData.num_of_measures * musicData.division
     var observableMusicData = ObservableMusicData(

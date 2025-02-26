@@ -60,18 +60,18 @@ abstract class JamSketchEngineAbstract : JamSketchEngine, IConfigAccessible {
     }
 
     override fun getMelodicOutline(channel: Int, measure: Int, tick: Int): Double {
-        val myMr = channelMrSet.find { it.first == channel }?.second
-        return if (myMr != null) {
-            (myMr.getMusicElement(Layer.OUTLINE, measure, tick)?.mostLikely) as Double
+        val channelMr = channelMrSet.find { it.first == channel }?.second
+        return if (channelMr != null) {
+            (channelMr.getMusicElement(Layer.OUTLINE, measure, tick)?.mostLikely) as Double
         } else {
             Double.NaN
         }
     }
 
     override fun getChord(channel: Int, measure: Int, tick: Int): ChordSymbol2? {
-        val myMr = channelMrSet.find { it.first == channel }?.second
-        return if (myMr != null) {
-            (myMr.getMusicElement(Layer.CHORD, measure, tick).mostLikely) as ChordSymbol2
+        val mr = channelMrSet.find { it.first == channel }?.second
+        return if (mr != null) {
+            (mr.getMusicElement(Layer.CHORD, measure, tick).mostLikely) as ChordSymbol2
         } else  {
             return ChordSymbol2.NON_CHORD
         }
