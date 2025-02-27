@@ -53,7 +53,7 @@ abstract class JamSketchEngineAbstract : JamSketchEngine, IConfigAccessible {
 //        println("mr == $mr ${channelMrSet.size}")
         val e = mr?.getMusicElement(Layer.OUTLINE, measure, tick)
         e?.let {
-            it.suspendUpdate()
+//            it.suspendUpdate()
             it.setEvidence(value)
             outlineUpdated(channel, measure, tick)
         }

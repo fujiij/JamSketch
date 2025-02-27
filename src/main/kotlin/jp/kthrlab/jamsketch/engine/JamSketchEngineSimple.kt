@@ -71,14 +71,11 @@ class JamSketchEngineSimple : JamSketchEngineAbstract(){
 
         val mr = channelMrSet.find { it.first == channel }?.second
         val e = mr?.getMusicElement(Layer.OUTLINE, measure, tick)
-        e?.resumeUpdate()
+//        e?.resumeUpdate()
 
-        val channelCalc = channelCalcSet.find { it.first == channel }
-        val noteSeqGenerator = channelCalc?.second?.get(Layer.OUTLINE)
-        noteSeqGenerator?.updated(measure, tick, Layer.OUTLINE, mr)
-
-        val sccGenerator = channelCalc?.second?.get(Layer.GEN)
-        sccGenerator?.updated(measure, tick, Layer.GEN, mr)
+        val calcMap = channelCalcSet.find { it.first == channel }?.second
+        calcMap?.get(Layer.OUTLINE)?.updated(measure, tick, Layer.OUTLINE, mr)
+        calcMap?.get(Layer.GEN)?.updated(measure, tick, Layer.GEN, mr)
     }
 
 
