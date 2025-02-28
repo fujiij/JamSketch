@@ -1,16 +1,25 @@
 package jp.kthrlab.jamsketch.view
 
-import jp.crestmuse.cmx.processing.gui.SimplePianoRoll
 import jp.kthrlab.jamsketch.music.data.PianoRollDataModelMultiChannel
-import java.awt.Color
 
-abstract class SimplePianoRollMultiChannel: SimplePianoRoll() {
+abstract class SimplePianoRollMultiChannel: SimplePianoRollScalable() {
     protected abstract var currentInstrumentChannelNumber: Int
 
-    override fun draw() {
-        super.draw()
+//    override fun draw() {
+//        super.draw()
+//        drawChannels()
+//    }
+
+    fun isInside(x: Int, y: Int, scaleFactor: Float): Boolean {
+        // from SimplePianoRoll
+        val nOctave =  3
+        val octaveWidth = 210.0
+        println("isInside($x, $y, $scaleFactor) == ${x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth}")
+        return x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth
+    }
+
+    override fun drawDataModel() {
         drawChannels()
-        drawPlayhead()
     }
 
     fun drawChannels() {
@@ -38,17 +47,5 @@ abstract class SimplePianoRollMultiChannel: SimplePianoRoll() {
     }
 
     //
-   private fun drawPlayhead() {
-        val measure = this.currentMeasure
-        val beat = this.currentBeat
-
-        if (measure >= 0) {
-            val x = this.beat2x(measure, beat)
-            this.stroke(Color.RED.rgb)
-            this.strokeWeight(1.0f)
-            this.line(x.toFloat(), 0.0f, x.toFloat(), 630.0f)
-        }
-
-    }
 
 }
