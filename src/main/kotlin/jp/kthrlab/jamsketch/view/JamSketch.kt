@@ -22,6 +22,7 @@ import jp.kthrlab.jamsketch.view.util.addInstrumentSelector
 import jp.kthrlab.jamsketch.view.util.sendAllNotesOff
 import jp.kthrlab.jamsketch.web.ServiceLocator
 import processing.core.PApplet
+import java.awt.Color
 import java.io.File
 import javax.swing.BoxLayout
 import javax.swing.JLabel
@@ -119,7 +120,8 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         }
 
     // scale
-    var scalePercentage: Float = 1.2f
+    var scalePercentage: Float = 0.0f
+
     // Get the position of the scaled cursor.
     private val musicMouseX: Int
         get() {
@@ -146,8 +148,9 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
      */
     override fun settings() {
         super.settings()
+        scalePercentage =
+            minOf(displayWidth.toFloat() / config.general.view_width.toFloat(), displayHeight.toFloat() / config.general.view_height.toFloat()) //1.2f
         size((config.general.view_width * scalePercentage).toInt(), (config.general.view_height * scalePercentage).toInt())
-
     }
 
     /**
@@ -164,6 +167,8 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         musicWidth = config.general.view_width
         musicHeight = config.general.view_height
         noCursor()
+
+        textAlign(CENTER, CENTER)
 
         if (config.general.mode != "client") {
             showMidiOutChooser()
@@ -223,6 +228,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         // ControlP5 GUI components
         p5ctrl = ControlP5(this)
         p5ctrl.isAutoDraw = false
+        p5ctrl.font.size = (p5ctrl.font.size * scalePercentage).toInt()
         addButtons(p5ctrl, config.general.mode, scalePercentage)
         addInstrumentSelector(p5ctrl, config.channels, this::color, scalePercentage)
 
@@ -278,10 +284,10 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         if (isLastMeasure()) processLastMeasure()
 
         // drawP5
-        pushMatrix()
+//        pushMatrix()
         resetMatrix()
         p5ctrl.draw()
-        popMatrix()
+//        popMatrix()
     }
 
     override fun mouseDragged() {
@@ -411,12 +417,12 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
 
 
     private fun drawCursor() {
-        stroke(0)
-        strokeWeight(1.5f)
-        fill(0)
+        stroke(Color.ORANGE.rgb)
+        strokeWeight(2f)
+        fill(Color.GRAY.rgb)
 
-        ellipse(musicMouseX.toFloat(), musicMouseY.toFloat(), 15f, 13f)
-        line(musicMouseX + 7.5, musicMouseY.toDouble(), musicMouseX + 7.5, (musicMouseY - 40).toDouble())
+        ellipse(musicMouseX.toFloat(), musicMouseY.toFloat(), 10f, 10f)
+//        line(musicMouseX + 7.5, musicMouseY.toDouble(), musicMouseX + 7.5, (musicMouseY - 40).toDouble())
     }
 
     private fun enhanceCursor() {
@@ -438,7 +444,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
                 (currentMeasure + dataModel!!.firstMeasure - config.music.initial_blank_measures + 1)
             textSize(32f)
             fill(0f, 0f, 0f)
-            text(currentMeasureInTotalMeasures.toString() + " / " + numOfTotalMeasures, 460f, 675f)
+            text( "$currentMeasureInTotalMeasures / $numOfTotalMeasures" , 460f, 645f + 32f/2)
         }
     }
 

@@ -57,7 +57,7 @@
     },
     {
       "number": 6,
-      "program": 13,
+      "program": 46,
       "color": {
         "r": 255,
         "g": 0,
@@ -69,12 +69,63 @@
       "number": 7,
       "program": 74,
       "color": {
-        "r": 153,
+        "r": 128,
         "g": 0,
-        "b": 153,
+        "b": 128,
+        "a": 127
+      }
+    },
+    {
+      "number": 8,
+      "program": 1,
+      "color": {
+        "r": 255,
+        "g": 0,
+        "b": 255,
+        "a": 127
+      }
+    },
+    {
+      "number": 9,
+      "program": 18,
+      "color": {
+        "r": 0,
+        "g": 255,
+        "b": 255,
+        "a": 127
+      }
+    },
+    {
+      "number": 11,
+      "program": 10,
+      "color": {
+        "r": 128,
+        "g": 128,
+        "b": 128,
+        "a": 127
+      }
+    },
+    {
+      "number": 12,
+      "program": 27,
+      "color": {
+        "r": 255,
+        "g": 192,
+        "b": 203,
+        "a": 127
+      }
+    },
+    {
+      "number": 13,
+      "program": 13,
+      "color": {
+        "r": 255,
+        "g": 223,
+        "b": 0,
         "a": 127
       }
     }
+
   ],
   "simple": {
     "model_file": "/models/model20180321.json",

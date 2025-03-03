@@ -5,40 +5,43 @@ import jp.kthrlab.jamsketch.config.Channel
 import java.awt.Color
 
 fun addButtons(p5ctrl: ControlP5, mode: String, scalePercentage: Float = 1.0f) {
+    val buttonWidth = 100
+    val buttonHeight = 40
+    val spacing = 10
+    val y = 645f
     if (mode == "client") {
         p5ctrl.addButton("reconnect")
             .setLabel("Reconnect")
-            .setPosition(20f * scalePercentage, 645f * scalePercentage)
-            .setSize((120 * scalePercentage).toInt(), (40 * scalePercentage).toInt())
+            .setPosition(spacing * scalePercentage, y * scalePercentage)
+            .setSize((buttonWidth * scalePercentage).toInt(), (buttonHeight * scalePercentage).toInt())
     } else {
         p5ctrl.addButton("startMusic")
             .setLabel("Start / Stop")
-            .setPosition(20f * scalePercentage, 645f * scalePercentage)
-            .setSize((120 * scalePercentage).toInt(), (40 * scalePercentage).toInt())
+            .setPosition(spacing * scalePercentage, y * scalePercentage)
+            .setSize((buttonWidth * scalePercentage).toInt(), (buttonHeight * scalePercentage).toInt())
         p5ctrl.addButton("loadCurve")
             .setLabel("Load")
-            .setPosition(300f * scalePercentage, 645f * scalePercentage)
-            .setSize((120 * scalePercentage).toInt(), (40 * scalePercentage).toInt())
-        // panic!
+            .setPosition((spacing*3 + buttonWidth*2) * scalePercentage, y * scalePercentage)
+            .setSize((buttonWidth * scalePercentage).toInt(), (buttonHeight * scalePercentage).toInt())
         p5ctrl.addButton("panic")
             .setColorBackground(Color.LIGHT_GRAY.rgb)
             .setColorForeground(Color.RED.rgb)
             .setLabel("Panic!")
-            .setPosition((p5ctrl.papplet.width - 20 * scalePercentage - 60 * scalePercentage).toFloat(), 645f * scalePercentage)
-            .setSize((60 * scalePercentage).toInt(), (40 * scalePercentage).toInt())
+            .setPosition((spacing*4 + buttonWidth*3) * scalePercentage, y * scalePercentage)
+            .setSize((buttonHeight * scalePercentage).toInt(), (buttonHeight * scalePercentage).toInt())
     }
     p5ctrl.addButton("resetMusic")
         .setLabel("Reset")
-        .setPosition(160f * scalePercentage, 645f * scalePercentage)
-        .setSize((120 * scalePercentage).toInt(), (40 * scalePercentage).toInt())
+        .setPosition((spacing*2 + buttonWidth) * scalePercentage, y * scalePercentage)
+        .setSize((buttonWidth * scalePercentage).toInt(), (buttonHeight * scalePercentage).toInt())
 }
 
 fun addInstrumentSelector(p5ctrl: ControlP5, channels: List<Channel>, color: (v1: Int, v2: Int, v3: Int) -> Int, scalePercentage: Float = 1.0f) {
     val p5Radio = p5ctrl.addRadioButton("setInstrument")
-        .setPosition(650f * scalePercentage, 655f * scalePercentage)
+        .setPosition(550f * scalePercentage, 645f * scalePercentage)
         .setSize((20 * scalePercentage).toInt(), (20 * scalePercentage).toInt())
-        .setItemsPerRow(4)
-        .setSpacingColumn(90)
+        .setItemsPerRow(6)
+        .setSpacingColumn((80 * scalePercentage).toInt())
         .setColorLabel(0x000000)
         .setNoneSelectedAllowed(false)
 

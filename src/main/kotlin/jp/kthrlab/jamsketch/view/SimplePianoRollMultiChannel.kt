@@ -5,19 +5,6 @@ import jp.kthrlab.jamsketch.music.data.PianoRollDataModelMultiChannel
 abstract class SimplePianoRollMultiChannel: SimplePianoRollScalable() {
     protected abstract var currentInstrumentChannelNumber: Int
 
-//    override fun draw() {
-//        super.draw()
-//        drawChannels()
-//    }
-
-    fun isInside(x: Int, y: Int, scaleFactor: Float): Boolean {
-        // from SimplePianoRoll
-        val nOctave =  3
-        val octaveWidth = 210.0
-        println("isInside($x, $y, $scaleFactor) == ${x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth}")
-        return x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth
-    }
-
     override fun drawDataModel() {
         drawChannels()
     }
@@ -25,7 +12,6 @@ abstract class SimplePianoRollMultiChannel: SimplePianoRollScalable() {
     fun drawChannels() {
         if (isNoteVisible) {
             with (dataModel as PianoRollDataModelMultiChannel) {
-                val lenMeas: Double = (width - keyboardWidth) / measureNum
                 channels.forEach { channel ->
                     with(channel.color){
                         strokeWeight(1.5f)
@@ -45,7 +31,5 @@ abstract class SimplePianoRollMultiChannel: SimplePianoRollScalable() {
             }
         }
     }
-
-    //
 
 }

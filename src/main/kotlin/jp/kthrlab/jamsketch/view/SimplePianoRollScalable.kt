@@ -2,7 +2,6 @@ package jp.kthrlab.jamsketch.view
 
 import jp.crestmuse.cmx.misc.PianoRoll
 import jp.crestmuse.cmx.processing.CMXApplet
-import java.awt.Color
 
 open class SimplePianoRollScalable(
     open var musicWidth: Int = 0,    // width before scale
@@ -17,11 +16,18 @@ open class SimplePianoRollScalable(
     var playheadR: Int = 255,
     var playheadB: Int = 0,
     var playheadG: Int = 0,
+    var playheadStrokeWeight: Float = 1.0f,
 ) : CMXApplet() {
+
+    object numOfKeysPerOctave {
+        val white = 7
+        val black = 5
+        val all = white + black // 12
+    }
 
     var basenn: Int = basenn
         set(value) {
-            (value % 12 == 0).let { field = value }
+            (value % numOfKeysPerOctave.all == 0).let { field = value }
         }
 
     var isNoteVisible = true
@@ -58,57 +64,38 @@ open class SimplePianoRollScalable(
     private fun drawKeyboard(x: Int, y: Int) {
         this.line(keyboardWidth, (y + 0).toDouble(), keyboardWidth, y.toDouble() + this.octaveWidth)
 
-        for (i in 1..7) {
+        // white keys
+        for (i in 1..numOfKeysPerOctave.white) {
             this.line(
                 x.toFloat(),
-                (y + (i.toDouble() * this.octaveWidth / 7.0).toInt()).toFloat(),
-                100.0f,
-                (y + (i.toDouble() * this.octaveWidth / 7.0).toInt()).toFloat()
+                (y + (i.toDouble() * this.octaveWidth / numOfKeysPerOctave.white).toInt()).toFloat(),
+                keyboardWidth.toFloat(),
+                (y + (i.toDouble() * this.octaveWidth / numOfKeysPerOctave.white).toInt()).toFloat()
             )
         }
 
+        // black keys
         this.fill(0)
-        this.rect(
-            x.toFloat(),
-            (y + (1.0 * this.octaveWidth / 12.0).toInt()).toFloat(),
-            60.0f,
-            ((this.octaveWidth / 12.0).toInt()).toFloat()
-        )
-        this.rect(
-            x.toFloat(),
-            (y + (3.0 * this.octaveWidth / 12.0).toInt()).toFloat(),
-            60.0f,
-            ((this.octaveWidth / 12.0).toInt()).toFloat()
-        )
-        this.rect(
-            x.toFloat(),
-            (y + (5.0 * this.octaveWidth / 12.0).toInt()).toFloat(),
-            60.0f,
-            ((this.octaveWidth / 12.0).toInt()).toFloat()
-        )
-        this.rect(
-            x.toFloat(),
-            (y + (8.0 * this.octaveWidth / 12.0).toInt()).toFloat(),
-            60.0f,
-            ((this.octaveWidth / 12.0).toInt()).toFloat()
-        )
-        this.rect(
-            x.toFloat(),
-            (y + (10.0 * this.octaveWidth / 12.0).toInt()).toFloat(),
-            60.0f,
-            ((this.octaveWidth / 12.0).toInt()).toFloat()
-        )
+        doubleArrayOf(1.0, 3.0, 5.0, 8.0, 10.0).forEach {
+            this.rect(
+                x.toFloat(),
+                (y + (it * this.octaveWidth / numOfKeysPerOctave.all).toInt()).toFloat(),
+                (keyboardWidth * 0.6).toFloat(),
+                ((this.octaveWidth / numOfKeysPerOctave.all).toInt()).toFloat()
+            )
+        }
+
     }
 
 
     private fun drawLines() {
         for (a in 0..<this.nOctave) {
-            for (b in 1..12) {
+            for (b in 1..numOfKeysPerOctave.all) {
                 this.stroke(130)
                 this.strokeWeight(0.0f)
-                val lineWidth = this.octaveWidth / 12.0
+                val lineWidth = this.octaveWidth / numOfKeysPerOctave.all
                 this.line(
-                    100.0, a.toDouble() * this.octaveWidth + lineWidth * b.toDouble(),
+                    this.keyboardWidth, a.toDouble() * this.octaveWidth + lineWidth * b.toDouble(),
                     this.musicWidth.toDouble(), a.toDouble() * this.octaveWidth + lineWidth * b.toDouble()
                 )
             }
@@ -137,7 +124,7 @@ open class SimplePianoRollScalable(
             val w = duration * lenMeas / data.beatNum.toDouble()
             val y = this.notenum2y(notenum.toDouble())
             fill(color(noteR, noteG, noteB))
-            this.rect(x.toFloat(), y.toFloat(), w.toFloat(), octaveWidth.toFloat() / 12.0f)
+            this.rect(x.toFloat(), y.toFloat(), w.toFloat(), octaveWidth.toFloat() / numOfKeysPerOctave.all.toFloat())
         }
 
     }
@@ -177,18 +164,18 @@ open class SimplePianoRollScalable(
     }
 
     protected fun y2notenum(y: Double): Double {
-        val topnn = this.basenn + 12 * this.nOctave
-        return topnn.toDouble() - y / (this.octaveWidth / 12.0)
+        val topnn = this.basenn + numOfKeysPerOctave.all * this.nOctave
+        return topnn.toDouble() - y / (this.octaveWidth / numOfKeysPerOctave.all)
     }
 
-//    protected fun notenum2y(nn: Int): Double {
-//        val topnn = this.basenn + 12 * this.nOctave
-//        return this.octaveWidth / 12.0 * (topnn - nn - 1).toDouble()
-//    }
+    protected fun isInside(x: Int, y: Int, scalePercentage: Float): Boolean {
+//        println("isInside($x, $y, $scaleFactor) == ${x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth}")
+        return x >= keyboardWidth && x < this.width / scalePercentage && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth
+    }
 
     protected fun notenum2y(nn: Double): Double {
-        val topnn = this.basenn + 12 * this.nOctave
-        return this.octaveWidth / 12.0 * (topnn.toDouble() - nn - 1.0)
+        val topnn = this.basenn + numOfKeysPerOctave.all * this.nOctave
+        return this.octaveWidth / numOfKeysPerOctave.all * (topnn.toDouble() - nn - 1.0)
     }
 
     protected fun drawPlayhead() {
@@ -197,9 +184,9 @@ open class SimplePianoRollScalable(
 
         if (measure >= 0) {
             val x = this.beat2x(measure, beat)
-            this.stroke(Color.RED.rgb)
-            this.strokeWeight(1.0f)
-            this.line(x.toFloat(), 0.0f, x.toFloat(), 630.0f)
+            this.stroke(color(playheadR, playheadG, playheadB))
+            this.strokeWeight(playheadStrokeWeight)
+            this.line(x.toFloat(), 0.0f, x.toFloat(), (this.octaveWidth * this.nOctave).toFloat())
         }
     }
 }
