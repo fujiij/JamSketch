@@ -39,8 +39,8 @@ abstract class JamSketchEngineAbstract : JamSketchEngine, IConfigAccessible {
         this.scc = scc
 
         config.channels.forEach { channel ->
-            scc.toDataSet().addPart(Random(channel.number).nextInt(), channel.number)
-                .addProgramChange(0, channel.program)
+            scc.toDataSet().addPart(Random(channel.channel_number).nextInt(), channel.channel_number)
+                .addProgramChange(0, channel.program_number)
         }
 
         initLocal()

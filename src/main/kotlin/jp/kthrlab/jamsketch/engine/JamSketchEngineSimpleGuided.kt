@@ -4,7 +4,6 @@ import jp.crestmuse.cmx.filewrappers.SCCDataSet
 import jp.crestmuse.cmx.inference.MusicCalculator
 import jp.crestmuse.cmx.misc.ChordSymbol2
 import jp.crestmuse.cmx.processing.CMXController
-import jp.kthrlab.jamsketch.engine.JamSketchEngineAbstract.Layer
 import jp.kthrlab.jamsketch.music.generator.NoteSeqGeneratorSimpleGuided
 import jp.kthrlab.jamsketch.music.generator.SCCGenerator
 
@@ -46,12 +45,12 @@ class JamSketchEngineSimpleGuided : JamSketchEngineAbstract() {
 
             mr.addMusicLayer(Layer.GEN, (0..11).toList())
 
-            channelMrSet.add(Pair(channel.number, mr))
+            channelMrSet.add(Pair(channel.channel_number, mr))
             val mapCalc = mutableMapOf(
-                Pair(Layer.OUTLINE, musicCalculatorForOutline(channel.number)),
-                Pair(Layer.GEN, musicCalculatorForGen(channel.number))
+                Pair(Layer.OUTLINE, musicCalculatorForOutline(channel.channel_number)),
+                Pair(Layer.GEN, musicCalculatorForGen(channel.channel_number))
             )
-            channelCalcSet.add(Pair(channel.number, mapCalc))
+            channelCalcSet.add(Pair(channel.channel_number, mapCalc))
         }
     }
 

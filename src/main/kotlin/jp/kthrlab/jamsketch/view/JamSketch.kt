@@ -19,6 +19,7 @@ import jp.kthrlab.jamsketch.view.element.drawGuideCurve
 import jp.kthrlab.jamsketch.view.element.drawParticles
 import jp.kthrlab.jamsketch.view.util.addButtons
 import jp.kthrlab.jamsketch.view.util.addInstrumentSelector
+import jp.kthrlab.jamsketch.view.util.getScalePercentage
 import jp.kthrlab.jamsketch.view.util.sendAllNotesOff
 import jp.kthrlab.jamsketch.web.ServiceLocator
 import processing.core.PApplet
@@ -39,7 +40,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
     var guideData: GuideData? = null
 
     private var currentMeasureInTotalMeasures = 0
-    override var currentInstrumentChannelNumber = config.channels[0].number
+    override var currentInstrumentChannelNumber = config.channels[0].channel_number
 
     var musicData: MusicData =
         MusicData(
@@ -72,7 +73,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         }
     ).let {
         config.channels.forEach { channel ->
-            it.addCurveByChannel(channel.number, arrayOfNulls<Int>(timelineWidth).toMutableList())
+            it.addCurveByChannel(channel.channel_number, arrayOfNulls<Int>(timelineWidth).toMutableList())
         }
         it
     }
@@ -120,7 +121,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         }
 
     // scale
-    var scalePercentage: Float = 0.0f
+    var scalePercentage: Float = 1.0f
 
     // Get the position of the scaled cursor.
     private val musicMouseX: Int
@@ -148,8 +149,10 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
      */
     override fun settings() {
         super.settings()
-        scalePercentage =
-            minOf(displayWidth.toFloat() / config.general.view_width.toFloat(), displayHeight.toFloat() / config.general.view_height.toFloat()) //1.2f
+        if (config.general.scalable) {
+            scalePercentage = getScalePercentage(this, config.general.view_width, config.general.view_height)
+            println("scalePercentage == $scalePercentage")
+        }
         size((config.general.view_width * scalePercentage).toInt(), (config.general.view_height * scalePercentage).toInt())
     }
 
@@ -356,7 +359,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
     fun drawCurve() {
         strokeWeight(3f)
         musicData.channelCurveSet.forEach { (channel, curve) ->
-            val configChannel = config.channels.find { it.number == channel }
+            val configChannel = config.channels.find { it.channel_number == channel }
             configChannel?.let {
                 with(configChannel.color){
                     stroke(r.toFloat(), g.toFloat(), b.toFloat(),  a.toFloat())
@@ -422,13 +425,11 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
         fill(Color.GRAY.rgb)
 
         ellipse(musicMouseX.toFloat(), musicMouseY.toFloat(), 10f, 10f)
-//        line(musicMouseX + 7.5, musicMouseY.toDouble(), musicMouseX + 7.5, (musicMouseY - 40).toDouble())
     }
 
     private fun enhanceCursor() {
         if (config.general.cursor_enhanced) {
             fill(255f, 0f, 0f)
-//            ellipse(mouseX.toFloat(), mouseY.toFloat(), 10f, 10f)
             ellipse(musicMouseX.toFloat(), musicMouseY.toFloat(), 10f, 10f)
         }
     }
@@ -530,7 +531,7 @@ class JamSketch : SimplePianoRollMultiChannel(), IConfigAccessible {
      * Change instrument
      */
     fun setInstrument(value: Int) {
-        currentInstrumentChannelNumber = config.channels.find { channel -> channel.program == value }!!.number
+        currentInstrumentChannelNumber = config.channels.find { channel -> channel.program_number == value }!!.channel_number
     }
 
     /**

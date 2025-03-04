@@ -42,11 +42,12 @@ fun addInstrumentSelector(p5ctrl: ControlP5, channels: List<Channel>, color: (v1
         .setSize((20 * scalePercentage).toInt(), (20 * scalePercentage).toInt())
         .setItemsPerRow(6)
         .setSpacingColumn((80 * scalePercentage).toInt())
+        .setColorBackground(Color.LIGHT_GRAY.rgb)
         .setColorLabel(0x000000)
         .setNoneSelectedAllowed(false)
 
     channels.forEach { channel ->
-        val item = p5Radio.addItem(programs[channel.program], channel.program.toFloat()).getItem(programs[channel.program])
+        val item = p5Radio.addItem(channel.program_name, channel.program_number.toFloat()).getItem(channel.program_name)
         with(channel.color) {
             item.setColorActive(color.invoke(r, g, b))
         }

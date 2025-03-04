@@ -169,7 +169,6 @@ open class SimplePianoRollScalable(
     }
 
     protected fun isInside(x: Int, y: Int, scalePercentage: Float): Boolean {
-//        println("isInside($x, $y, $scaleFactor) == ${x >= 100 && x < this.width / scaleFactor && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth}")
         return x >= keyboardWidth && x < this.width / scalePercentage && y >= 0 && y.toDouble() < nOctave.toDouble() * octaveWidth
     }
 

@@ -17,7 +17,7 @@ abstract class SimplePianoRollMultiChannel: SimplePianoRollScalable() {
                         strokeWeight(1.5f)
                         stroke(r.toFloat(), g.toFloat(), b.toFloat(),  a.toFloat())
                     }
-                    val part = getPart(channel.number)
+                    val part = getPart(channel.channel_number)
                     part?.noteOnlyList?.forEach { note ->
                         if (note.onset() >= (displaysFromMeasure * beatNum * scc.division).toLong() && note.onset() < (displaysToMeasure * beatNum * scc.division).toLong()) {
                             val measure: Int = (note.onset() / scc.division.toLong() / beatNum.toLong()).toInt()

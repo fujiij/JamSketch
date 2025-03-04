@@ -32,12 +32,12 @@ class JamSketchEngineTF1: JamSketchEngineAbstract() {
             // Layer.GEN
             mr.addMusicLayer(Layer.GEN, Array(config.tf.tf_note_con_col_start){it})
 
-            channelMrSet.add(Pair(channel.number, mr))
+            channelMrSet.add(Pair(channel.channel_number, mr))
             val mapCalc = mutableMapOf(
-                Pair(Layer.OUTLINE, musicCalculatorForOutline(channel.number)),
-                Pair(Layer.GEN, musicCalculatorForGen(channel.number))
+                Pair(Layer.OUTLINE, musicCalculatorForOutline(channel.channel_number)),
+                Pair(Layer.GEN, musicCalculatorForGen(channel.channel_number))
             )
-            channelCalcSet.add(Pair(channel.number, mapCalc))
+            channelCalcSet.add(Pair(channel.channel_number, mapCalc))
         }
 
     }

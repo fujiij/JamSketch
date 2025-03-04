@@ -34,8 +34,8 @@
   },
   "channels": [
     {
-      "number": 5,
-      "program": 67,
+      "channel_number": 5,
+      "program_number": 67,
       "color": {
         "r": 0,
         "g": 0,
@@ -44,8 +44,8 @@
       }
     },
     {
-      "number": 6,
-      "program": 57,
+      "channel_number": 6,
+      "program_number": 57,
       "color": {
         "r": 0,
         "g": 255,
@@ -54,8 +54,8 @@
       }
     },
     {
-      "number": 7,
-      "program": 13,
+      "channel_number": 7,
+      "program_number": 13,
       "color": {
         "r": 255,
         "g": 0,
@@ -64,8 +64,8 @@
       }
     },
     {
-      "number": 8,
-      "program": 74,
+      "channel_number": 8,
+      "program_number": 74,
       "color": {
         "r": 153,
         "g": 0,
