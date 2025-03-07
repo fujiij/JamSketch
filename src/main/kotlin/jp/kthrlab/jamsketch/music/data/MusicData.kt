@@ -2,6 +2,7 @@ package jp.kthrlab.jamsketch.music.data
 
 import jp.crestmuse.cmx.filewrappers.SCC
 import jp.crestmuse.cmx.processing.CMXController
+import java.util.Collections
 
 /**
  * 音楽生成の入出力データ
@@ -26,7 +27,7 @@ open class MusicData(
     override var scc: SCC = CMXController.readSMFAsSCC(javaClass.getResource(filename).path)
 
     // multi-channel
-    var channelCurveSet: Set<Pair<Int, MutableList<Int?>>> = mutableSetOf()
+    var channelCurveSet: Set<Pair<Int, MutableList<Int?>>> = Collections.synchronizedSet(mutableSetOf())
 
     init {
         scc.toDataSet().repeat(
@@ -38,7 +39,7 @@ open class MusicData(
 
     // IMusicData
     override fun addCurveByChannel(channel: Int, curve: MutableList<Int?>) {
-        channelCurveSet += Pair(channel, curve)
+        channelCurveSet += Pair(channel, Collections.synchronizedList(curve))
     }
 
     override fun resetMusicData() {
