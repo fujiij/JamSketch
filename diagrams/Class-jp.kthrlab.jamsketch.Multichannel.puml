@@ -10,41 +10,39 @@ class processing.core.PApplet {
 }
 
 package "kthrlab" {
-    package "pianoroll" #orange {
-        interface MultichannelPianoRoll {
-            CMXController cmx // need cmx?
-        }
-        PianoRoll <|.. MultichannelPianoRoll
-
-        class MultichannelPianoRollPApplet {
-        }
-        MultichannelPianoRoll <|.. MultichannelPianoRollPApplet
-        PApplet <|-- MultichannelPianoRollPApplet
-    }
+'    package "pianoroll" #orange {
+'        interface MultichannelPianoRoll {
+'            CMXController cmx // need cmx?
+'        }
+'        PianoRoll <|.. MultichannelPianoRoll
+'
+'        class MultichannelPianoRollPApplet {
+'        }
+'        MultichannelPianoRoll <|.. MultichannelPianoRollPApplet
+'        PApplet <|-- MultichannelPianoRollPApplet
+'    }
     package "jamsketch" {
         package "view" {
-            class JamSketch {
+            class SimplePianoRollScalable #orange {
+                dataModel: PianoRoll.DataModel?
             }
-            SimplePianoRoll <|-- JamSketch
+            CMXApplet <|-- SimplePianoRollScalable
+            class SimplePianoRollMultiChannel #orange {
+            }
+            SimplePianoRollScalable <|-- SimplePianoRollMultiChannel
 
-            class MultichannelJamSketch #orange {
+            class JamSketch #orange {
             }
-            MultichannelPianoRollPApplet <|-- MultichannelJamSketch
-            note bottom of MultichannelJamSketch
-                Temporary implementation
-            end note
+            SimplePianoRollMultiChannel <|-- JamSketch
         }
         package "music" {
             package "data" {
                 class MusicData {
-                    curve1: MutableList<Int?>
-                    // XY coordinates of the curve
-
                     scc: SCC
                     // Data converted from input MIDI file to SCCXML format
 
                     <color:red>channelCurveSet: Set<Pair<Int, MutableList<Int?>>></color>
-                    // for multi-channel
+                    // XY coordinates of the curve by channel
 
                     filename: Input file name
                     size: Int
@@ -64,14 +62,15 @@ package "kthrlab" {
 ''                        curves: MutableList<Pair MutableList<Int?>>
 '                    }
 '                    MusicData <|-- MultichannelMusicData
+                class PianoRollDataModelMultiChannel #orange {
+                }
+                DataModel <|.. PianoRollDataModelMultiChannel
             }
         }
     }
 }
 
 MusicData *-- SCC
-
-'PianoRoll +-- DataModel
-'MultiPartPianoRoll o-- CMXController
+SimplePianoRollScalable *-- DataModel
 
 @enduml
